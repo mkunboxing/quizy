@@ -14,7 +14,7 @@ const TimerContent = () => {
       const timer = setTimeout(() => setSeconds(seconds - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      router.push(`/questions?id=${id}`); // Redirect to questions page with id
+      router.push(`/questions?id=${id}`);
     }
   }, [seconds, router, id]);
 

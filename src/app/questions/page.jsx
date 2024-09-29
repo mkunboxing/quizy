@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const QuestionsContent = () => {
   const router = useRouter();
@@ -17,6 +19,7 @@ const QuestionsContent = () => {
   const [userId, setUserId] = useState(null);
   const [cardId, setCardId] = useState(null);
   const [cardName, setCardName] = useState(null);
+  const [showCoinAnimation, setShowCoinAnimation] = useState(false);
 
   // Score tracking
   const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
@@ -110,6 +113,8 @@ const QuestionsContent = () => {
     if (isCorrect) {
       setCorrectAnswersCount(prev => prev + 1);
       setPoints(prev => prev + 4);
+      setShowCoinAnimation(true);
+      setTimeout(() => setShowCoinAnimation(false), 1000);
     } else {
       setWrongAnswersCount(prev => prev + 1);
     }
@@ -149,8 +154,22 @@ const QuestionsContent = () => {
 
   return (
     <div className="h-screen w-full mx-auto px-4 md:py-8 py-4 bg-gray-900">
-      <h1 className='text-yellow-500 text-center text-2xl font-bold mb-4'>{cardName} Quiz</h1>
-      <div className='bg-gray-800 rounded-lg p-4 md:p-8 text-white mb-14'>
+      <div className="flex justify-between items-center">
+        <h1 className="text-yellow-500 text-2xl font-bold mb-4">
+          {cardName} Quiz
+        </h1>
+        <div className="flex items-center bg-gray-500 rounded-full px-4 py-1">
+          <Image
+            src="/coin.png"
+            alt="Coin"
+            width={15}
+            height={15}
+            className="mr-2"
+          />
+          <span className="text-white font-bold">{points}</span>
+        </div>
+      </div>
+      <div className="bg-gray-800 rounded-lg p-4 md:p-8 text-white mb-14">
         <div className="text-center md:mb-8 mb-1">
           <h2 className="md:text-2xl mb-2">Time Remaining :</h2>
           <div className="inline-block relative">
@@ -182,19 +201,28 @@ const QuestionsContent = () => {
           </div>
         </div>
 
-        <p className="text-center md:text-xl text-xs md:mb-6 mb-2">Question {currentQuestionIndex + 1} of {questions.length}</p>
+        <p className="text-center md:text-xl text-xs md:mb-6 mb-2">
+          Question {currentQuestionIndex + 1} of {questions.length}
+        </p>
 
-        <h2 className="md:text-xl text-sm md:mb-8 mb-3 text-center">{currentQuestion.question}</h2>
+        <h2 className="md:text-xl text-sm md:mb-8 mb-3 text-center">
+          {currentQuestion.question}
+        </h2>
 
         <div className="md:space-y-4 space-y-3">
           {currentQuestion.options.map((option) => (
             <button
               key={option.answerId}
-              className={`w-full py-2 md:py-3 px-4 md:px-6 rounded-full text-left ${getButtonClass(option)}`}
+              className={`w-full py-2 md:py-3 px-4 md:px-6 rounded-full text-left ${getButtonClass(
+                option
+              )}`}
               onClick={() => handleAnswerClick(option.answerId)}
               disabled={showAnswer}
             >
-              <span className="font-bold mr-2">{option.answerId.replace('option', '')}.</span> {option.answer}
+              <span className="font-bold mr-2">
+                {option.answerId.replace("option", "")}.
+              </span>{" "}
+              {option.answer}
             </button>
           ))}
         </div>
@@ -221,6 +249,31 @@ const QuestionsContent = () => {
           Submit
         </button>
       )}
+      <AnimatePresence>
+        {showCoinAnimation && (
+          <motion.div
+            initial={{
+              opacity: 1,
+              x: "-50%",
+              y: "-50%",
+              left: "50%",
+              top: "50%",
+            }}
+            animate={{
+              opacity: 1,
+              x: "calc(100vw - 50px)",
+              y: "20px",
+              left: "0%",
+              top: "0%",
+            }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="fixed"
+          >
+            <Image src="/coin.png" alt="Coin" width={30} height={30} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

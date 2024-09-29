@@ -39,11 +39,11 @@ const ReviewAnsContent = () => {
         <ReviewCard
           key={item._id}
           question={item.question.question}
-          options={item.question.options.map(option => option.answer)} // Extract the answers
-          correctAnswer={item.question.options.find(option => option.answerId === item.correctAnswerId).answer} // Find the correct answer
-          userAnswer={item.question.options.find(option => option.answerId === item.userSelectedOption)?.answer || 'No answer selected'} // The answer selected by the user
-          time={item.takenTime} // Time taken for the question
-          score={item.pointsEarned} // Points earned for the question
+          options={item.question.options.map(option => option.answer)}
+          correctAnswer={item.question.options.find(option => option.answerId === item.correctAnswerId).answer} 
+          userAnswer={item.question.options.find(option => option.answerId === item.userSelectedOption)?.answer || 'No answer selected'} 
+          time={item.takenTime} 
+          score={item.pointsEarned} 
         />
       ))}
       </div>

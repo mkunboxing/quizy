@@ -1,4 +1,5 @@
 'use client'
+import Header from '@/app/_components/header';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -44,6 +45,8 @@ const QuizDetails = () => {
   
 
   return (
+    <>
+    <Header/>
     <div className="h-screen mx-auto px-4 py-8 bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-6 text-center">{cardDetails}</h1>
       <div className="bg-gray-700 rounded-lg p-6 max-w-2xl mx-auto">
@@ -57,6 +60,7 @@ const QuizDetails = () => {
         </Link>
       </div>
     </div>
+    </>
   );
 };
 
