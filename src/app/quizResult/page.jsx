@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation'; 
 import QuizResult from "../_components/QuizResult";
+import Confetti from 'react-confetti';  
 
 const QuizResultContent = () => {
   const [results, setResults] = useState({
@@ -22,6 +23,45 @@ const QuizResultContent = () => {
   const userId = searchParams.get('userId'); 
   const cardId = searchParams.get('cardId'); 
 
+  // Set window size dynamically, and check if it's the client
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0
+  });
+
+  // State to control confetti visibility
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    // Only run the confetti setup and window resize on the client
+    if (typeof window !== 'undefined') {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+
+      const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      // Show confetti for 5 seconds on client side
+      setShowConfetti(true);
+      const confettiTimer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000);
+
+      return () => {
+        clearTimeout(confettiTimer);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []); 
+
   useEffect(() => {
     if (!userId && !cardId) return;
 
@@ -36,9 +76,8 @@ const QuizResultContent = () => {
         const totalTime = apiData.reduce((acc, curr) => acc + curr.takenTime, 0);
         const score = apiData.reduce((acc, curr) => acc + curr.pointsEarned, 0);
 
-        // Setting the fetched data
         setResults({
-          coinEarned: score, // Assuming score is the coins earned
+          coinEarned: score, 
           score: score,
           correct: correct,
           incorrect: incorrect,
@@ -46,7 +85,7 @@ const QuizResultContent = () => {
           timeSpent: totalTime,
           unattempted: apiData.length - correct - incorrect,
           timePerQuestion: (totalTime / apiData.length).toFixed(2),
-          liveRank: 55 // hardcoded fallback
+          liveRank: 55 
         });
       } catch (error) {
         console.error('Error fetching quiz results:', error);
@@ -56,13 +95,20 @@ const QuizResultContent = () => {
     fetchQuizResults();
   }, [userId, cardId]);
 
-
   return (
     <div className="mx-auto md:px-5 md:py-5 bg-gray-900 h-screen">
-    <QuizResult
-      quizTitle='Your Quiz Result'
-      results={results}
-    />
+      {/* Conditionally render confetti */}
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}  // Full window width
+          height={windowSize.height} // Full window height
+          numberOfPieces={500} // Adjust the amount of confetti
+        />
+      )}
+      <QuizResult
+        quizTitle='Your Quiz Result'
+        results={results}
+      />
     </div>
   );
 };

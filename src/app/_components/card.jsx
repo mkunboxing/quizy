@@ -20,8 +20,9 @@ const Card = ({title, id}) => {
             <p>Difficulty: Easy</p>
           </div>
         </div>
-        <div className="p-4">
+        <div className="p-2 flex justify-between items-center">
           <h3 className="text-white text-lg font-semibold">{title}</h3>
+          <p className="text-gray-400 text-sm">Click to start</p>
         </div>
       </div>
     </Link>

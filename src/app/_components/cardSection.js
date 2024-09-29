@@ -14,7 +14,6 @@ const CardSection = () => {
           try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cards`);
             setCards(response.data);
-            console.log("hit");
           } catch (error) {
             console.error('Error fetching cards:', error);
           }
@@ -64,7 +63,7 @@ const CardSection = () => {
                 ))}
             </Slider>
             
-            <h2 className="text-2xl font-bold mb-6 mt-12 text-center">Math Quizzes</h2>
+            <h2 className="text-2xl font-bold mb-6 mt-12 text-center">Programming Quizzes</h2>
             <Slider {...settings}>
                 {cards.map((card) => (
                     <div key={card._id} className="px-2">

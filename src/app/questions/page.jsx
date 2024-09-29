@@ -37,6 +37,8 @@ const QuestionsContent = () => {
     }
   }, []);
 
+  
+
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cards/${id}`)
       .then(response => {
