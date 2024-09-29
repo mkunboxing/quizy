@@ -2,21 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -25,3 +12,35 @@ body {
     text-wrap: balance;
   }
 }
+
+.animate-coins {
+  animation: slide-left-to-right 1s forwards;
+}
+
+@keyframes coin-animation {
+  from {
+    transform: translateY(0);
+    opacity: 5;
+  }
+  to {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-left-to-right {
+  from {
+    transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-left-right {
+      animation: slide-left-to-right 0.5s ease-out forwards;
+    }
+
+  
