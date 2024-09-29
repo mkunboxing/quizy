@@ -50,6 +50,7 @@ export default function Header() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserId("");
+    setPoints(0);
   };
 
   return (

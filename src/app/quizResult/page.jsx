@@ -2,26 +2,27 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
-import { useSearchParams } from 'next/navigation'; 
+import { useSearchParams, useRouter } from 'next/navigation'; // useRouter for navigation
 import QuizResult from "../_components/QuizResult";
-import Confetti from 'react-confetti';  
+import Confetti from 'react-confetti';
 
 const QuizResultContent = () => {
   const [results, setResults] = useState({
-    coinEarned: 0,    
-    score: 0,         
-    correct: 0,        
-    incorrect: 0,      
-    percentage: 0,    
-    timeSpent: 0,     
-    unattempted: 0,    
+    coinEarned: 0,
+    score: 0,
+    correct: 0,
+    incorrect: 0,
+    percentage: 0,
+    timeSpent: 0,
+    unattempted: 0,
     timePerQuestion: 0,
-    liveRank: 0       
+    liveRank: 0
   });
 
   const searchParams = useSearchParams();
-  const userId = searchParams.get('userId'); 
-  const cardId = searchParams.get('cardId'); 
+  const userId = searchParams.get('userId');
+  const cardId = searchParams.get('cardId');
+  const router = useRouter(); // Get the router for navigation
 
   // Set window size dynamically, and check if it's the client
   const [windowSize, setWindowSize] = useState({
@@ -31,6 +32,20 @@ const QuizResultContent = () => {
 
   // State to control confetti visibility
   const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    // Handle browser back button and navigate to home page
+    const handlePopState = () => {
+      router.replace('/'); // Redirect to home page on back button press
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [router]);
 
   useEffect(() => {
     // Only run the confetti setup and window resize on the client
@@ -60,10 +75,10 @@ const QuizResultContent = () => {
         window.removeEventListener('resize', handleResize);
       };
     }
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    if (!userId && !cardId) return;
+    if (!userId || !cardId) return;
 
     const fetchQuizResults = async () => {
       try {
@@ -77,7 +92,7 @@ const QuizResultContent = () => {
         const score = apiData.reduce((acc, curr) => acc + curr.pointsEarned, 0);
 
         setResults({
-          coinEarned: score, 
+          coinEarned: score,
           score: score,
           correct: correct,
           incorrect: incorrect,
@@ -85,7 +100,7 @@ const QuizResultContent = () => {
           timeSpent: totalTime,
           unattempted: apiData.length - correct - incorrect,
           timePerQuestion: (totalTime / apiData.length).toFixed(2),
-          liveRank: 55 
+          liveRank: 55
         });
       } catch (error) {
         console.error('Error fetching quiz results:', error);

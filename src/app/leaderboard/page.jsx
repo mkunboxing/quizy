@@ -2,7 +2,8 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation'; // Importing the useSearchParams hook
+import { useSearchParams, useRouter } from 'next/navigation'; // Importing the useSearchParams hook
+import { ArrowLeft } from 'lucide-react';
 
 const LeaderboardItem = ({ rank, name, score }) => (
   <div className="flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2 h-full">
@@ -85,10 +86,7 @@ const LeaderboardContent = () => {
 
         const apiData = data.data || [];
         const dummyData = [
-          { userId: 'dummy1', userName: 'Amit Kumar', totalPoints: 5 },
-          { userId: 'dummy2', userName: 'Priya Sharma', totalPoints: 10 },
-          { userId: 'dummy3', userName: 'Rajesh Singh', totalPoints: 15 },
-          { userId: 'dummy4', userName: 'Anjali Verma', totalPoints: 12 },
+          
         ];
 
         const combinedData = [...apiData, ...dummyData];
@@ -119,9 +117,16 @@ const LeaderboardContent = () => {
 };
 
 const Leaderboard = () => {
+  const router = useRouter();
+  const handleBackClick = () => {
+    router.back();
+  };
   return (
     <div className="mx-auto h-screen bg-gray-900 p-8">
       <div className="flex items-center justify-center mb-6">
+        <div onClick={handleBackClick} className="absolute left-10 cursor-pointer">
+          <ArrowLeft className="text-yellow-400" />
+        </div>
         <h1 className="text-yellow-400 text-xl md:text-2xl font-bold">Leaderboard</h1>
       </div>
       <Suspense fallback={<div className="text-white">Loading...</div>}>

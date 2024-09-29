@@ -1,14 +1,16 @@
 'use client'
 import React, { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import ReviewCard from '../_components/ReviewCard';
 import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 const ReviewAnsContent = () => {
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
   const cardId = searchParams.get('cardId');
   const [reviewData, setReviewData] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchReviewData = async () => {
@@ -29,10 +31,17 @@ const ReviewAnsContent = () => {
     fetchReviewData();
   }, [userId, cardId]);
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   return (
     <div className="mx-auto px-10 py-10 bg-gray-900 ">
        <div className="flex items-center mb-6">
-        <h1 className="text-4xl font-bold text-yellow-400">Review your answers</h1>
+        <div onClick={handleBackClick} className="absolute left-10 cursor-pointer">
+          <ArrowLeft className="text-yellow-400" />
+        </div>
+        <h1 className="text-4xl font-bold text-yellow-400 ml-10">Review your answers</h1>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
       {reviewData.map((item, index) => (

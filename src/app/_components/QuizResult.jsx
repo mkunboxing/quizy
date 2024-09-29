@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { ChevronRight, Trophy, CheckCircle, XCircle, Percent, Clock } from 'lucide-react';
+import { ChevronRight, Trophy, CheckCircle, XCircle, Percent, Clock, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
   
 const QuizResult = ({ quizTitle, results }) => {
@@ -38,9 +38,25 @@ const QuizResult = ({ quizTitle, results }) => {
     }
   }, [userId, results.score]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ''; // Chrome requires returnValue to be set
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <div className="mx-auto px-4 py-8 bg-gray-900 text-white">
-      <div className="flex items-center mb-6 justify-center">
+      <div className="flex items-center mb-6 justify-center relative">
+        <Link href="/" className="absolute left-0">
+          <ArrowLeft className="text-yellow-400 cursor-pointer" />
+        </Link>
         <h1 className="text-2xl font-bold text-yellow-400">{quizTitle}</h1>
       </div>
 
@@ -50,7 +66,7 @@ const QuizResult = ({ quizTitle, results }) => {
           <ResultItem icon={<CheckCircle className="text-green-500" />} label="Correct" value={results.correct} />
           <ResultItem icon={<XCircle className="text-red-500" />} label="Incorrect" value={results.incorrect} />
           <ResultItem icon={<Percent className="text-red-500" />} label="Percentage" value={`${results.percentage}%`} className='col-span-2' />
-          <ResultItem icon={<Clock className="text-blue-400" />} label="Time Spent" value={`${results.timeSpent} sec`}  />
+          <ResultItem icon={<Clock className="text-blue-400" />} label="Time Spent" value={`${results.timeSpent} sec`} />
           <ResultItem icon={<Clock className="text-blue-400" />} label="Time/Ques" value={`${results.timePerQuestion} sec`} />
         </div>
       </div>
