@@ -2,12 +2,24 @@
 import Header from '@/app/_components/header';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
 const QuizDetails = () => {
   const { id } = useParams()
-  console.log(id);
+
+  const router = useRouter();
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/signup');
+    } else {
+      // Extract the payload from the JWT token
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('User ID:', payload.userId);
+    }
+  }, []);
 
 
   const [cardDetails, setCardDetails] = useState(null);
