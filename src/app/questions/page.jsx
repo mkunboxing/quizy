@@ -1,10 +1,10 @@
 'use client';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 
-const Questions = () => {
+const QuestionsContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
@@ -222,6 +222,14 @@ const Questions = () => {
         </button>
       )}
     </div>
+  );
+};
+
+const Questions = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuestionsContent />
+    </Suspense>
   );
 };
 

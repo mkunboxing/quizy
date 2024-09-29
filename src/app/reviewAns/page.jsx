@@ -1,11 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReviewCard from '../_components/ReviewCard';
 import { ArrowLeft } from 'lucide-react';
 
-
-const ReviewAns = () => {
+const ReviewAnsContent = () => {
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
   const cardId = searchParams.get('cardId');
@@ -49,6 +48,14 @@ const ReviewAns = () => {
       ))}
       </div>
     </div>
+  );
+};
+
+const ReviewAns = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReviewAnsContent />
+    </Suspense>
   );
 };
 

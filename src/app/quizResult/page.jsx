@@ -1,11 +1,11 @@
-'use client'; // Required for hooks to work in Next.js app directory
+'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation'; 
 import QuizResult from "../_components/QuizResult";
 
-const QuizResultPage = () => {
+const QuizResultContent = () => {
   const [results, setResults] = useState({
     coinEarned: 0,    
     score: 0,         
@@ -64,6 +64,14 @@ const QuizResultPage = () => {
       results={results}
     />
     </div>
+  );
+};
+
+const QuizResultPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuizResultContent />
+    </Suspense>
   );
 };
 

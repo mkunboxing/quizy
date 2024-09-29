@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation'; // Importing the useSearchParams hook
@@ -72,39 +72,31 @@ const TopThree = ({ users }) => (
     })}
   </div>
 );
-
-const Leaderboard = () => {
+const LeaderboardContent = () => {
   const searchParams = useSearchParams();
-  const cardId = searchParams.get('cardId'); // Getting cardId from URL
+  const cardId = searchParams.get('cardId');
   const [topThree, setTopThree] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/points/${cardId}`); // Update with your actual endpoint
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/points/${cardId}`);
         const data = await response.json();
 
-        // Assuming your API returns an array of objects with userId, userName, and totalPoints
-        const apiData = data.data || []; // Adjust based on your API response
-
-        // Combine API data with dummy data
+        const apiData = data.data || [];
         const dummyData = [
           { userId: 'dummy1', userName: 'Amit Kumar', totalPoints: 5 },
           { userId: 'dummy2', userName: 'Priya Sharma', totalPoints: 10 },
           { userId: 'dummy3', userName: 'Rajesh Singh', totalPoints: 15 },
           { userId: 'dummy4', userName: 'Anjali Verma', totalPoints: 12 },
-          
         ];
 
-        // Combine the fetched data and dummy data
         const combinedData = [...apiData, ...dummyData];
-
-        // Sort by totalPoints in descending order
         combinedData.sort((a, b) => b.totalPoints - a.totalPoints);
 
-        setTopThree(combinedData.slice(0, 3)); // Get top three users
-        setOtherUsers(combinedData.slice(3)); // Get the rest of the users
+        setTopThree(combinedData.slice(0, 3));
+        setOtherUsers(combinedData.slice(3));
       } catch (error) {
         console.error('Error fetching leaderboard data:', error);
       }
@@ -116,18 +108,26 @@ const Leaderboard = () => {
   }, [cardId]);
 
   return (
-    <div className="w-full h-screen bg-gray-900 p-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <h1 className="text-yellow-400 text-2xl font-bold">Leaderboard</h1>
-      </div>
-
+    <>
       <TopThree users={topThree} />
-
       <div>
         {otherUsers.map((user, index) => (
           <LeaderboardItem key={user.userId} rank={index + 4} name={user.userName} score={user.totalPoints} />
         ))}
       </div>
+    </>
+  );
+};
+
+const Leaderboard = () => {
+  return (
+    <div className="w-full h-screen bg-gray-900 p-6 mx-auto">
+      <div className="flex items-center mb-6">
+        <h1 className="text-yellow-400 text-2xl font-bold">Leaderboard</h1>
+      </div>
+      <Suspense fallback={<div className="text-white">Loading...</div>}>
+        <LeaderboardContent />
+      </Suspense>
     </div>
   );
 };
