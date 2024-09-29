@@ -1,27 +1,27 @@
-'use client'
+'use client';
 import React, { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation'; // Importing the useSearchParams hook
 import { ArrowLeft } from 'lucide-react';
 
-const LeaderboardItem = ({ rank, name, score }) => (
-  <div className="flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2 h-full">
-    <span className="text-yellow-400  font-bold text-xs md:text-xl">{rank}</span>
+const LeaderboardItem = ({ rank, name, score, isCurrentUser }) => (
+  <div className={`flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2 h-full ${isCurrentUser ? 'bg-green-500' : ''}`}>
+    <span className="text-yellow-400 font-bold text-xs md:text-xl">{rank}</span>
     <div className="flex items-center">
       <Image src="/userImage.png" alt={name} className="w-8 h-8 rounded-full mr-2 md:w-12 md:h-12" width={40} height={40} />
-      <span className="text-white text-sm md:text-xl capitalize">{name}</span>
+      <span className={`text-sm md:text-xl capitalize ${isCurrentUser ? 'text-black' : 'text-white'}`}>{name}</span>
     </div>
     <div className="flex items-center">
-    <span className="text-yellow-400 mr-2 text-xs md:text-xl">Points</span>
+      <span className="text-yellow-400 mr-2 text-xs md:text-xl">Points</span>
       <div className="bg-yellow-400 rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
-      <span className="text-gray-800 text-xs md:text-xl">{score}</span>
+        <span className={`text-xs md:text-xl ${isCurrentUser ? 'text-gray-900' : 'text-gray-800'}`}>{score}</span>
       </div>
     </div>
   </div>
 );
 
-const TopThree = ({ users }) => (
+const TopThree = ({ users, currentUser }) => (
   <div className="flex justify-around items-end mb-6">
     {users.map((user, index) => {
       let initialPosition, size, mt, positionClass;
@@ -49,7 +49,7 @@ const TopThree = ({ users }) => (
       return (
         <motion.div
           key={user.userId}
-          className={`flex flex-col items-center ${mt} ${positionClass}`}
+          className={`flex flex-col items-center ${mt} ${positionClass} ${currentUser && currentUser.userId === user.userId ? 'bg-yellow-500 p-2 rounded-lg' : ''}`}
           initial={initialPosition}
           animate={{ opacity: 1, x: 0, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -65,31 +65,51 @@ const TopThree = ({ users }) => (
               <span className="text-white font-bold">{index + 1}</span>
             </div>
           </div>
-          <span className="text-white text-xs font-bold md:text-xl capitalize">{user.userName}</span>
-          <span className="text-yellow-400 text-xs md:text-xl">{user.totalPoints}</span>
+          <span className={`text-xs font-bold md:text-xl capitalize ${currentUser && currentUser.userId === user.userId ? 'text-black' : 'text-white'}`}>{user.userName}</span>
+          <span className={`text-xs md:text-xl ${currentUser && currentUser.userId === user.userId ? 'text-black' : 'text-yellow-400'}`}>{user.totalPoints}</span>
         </motion.div>
       );
-    })}   
+    })}
   </div>
 );
+
 const LeaderboardContent = () => {
   const searchParams = useSearchParams();
-  const cardId = searchParams.get('cardId');
+  const cardId = searchParams.get('cardId'); // Extract the cardId
+  const userId = searchParams.get('userId'); // Extract the userId
+
   const [topThree, setTopThree] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null); // To store the current user data
+  const [token, setToken] = useState(null); // To store token after component mounts
+
+  useEffect(() => {
+    // Set token after the component mounts to ensure it's only accessed client-side
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/points/${cardId}`);
-        const data = await response.json();
+        // Fetch leaderboard data
+        const leaderboardResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/points/${cardId}`);
+        const leaderboardData = await leaderboardResponse.json();
+        const apiData = leaderboardData.data || [];
 
-        const apiData = data.data || [];
-        const dummyData = [
-          
-        ];
+        // Fetch current user data
+        if (userId && token) {
+          const userResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/user-points/${userId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          const userData = await userResponse.json();
+          setCurrentUser(userData.data);
+        }
 
-        const combinedData = [...apiData, ...dummyData];
+        const combinedData = [...apiData];
         combinedData.sort((a, b) => b.totalPoints - a.totalPoints);
 
         setTopThree(combinedData.slice(0, 3));
@@ -99,17 +119,23 @@ const LeaderboardContent = () => {
       }
     };
 
-    if (cardId) {
+    if (cardId && token) {
       fetchLeaderboardData();
     }
-  }, [cardId]);
+  }, [cardId, userId, token]);
 
   return (
     <>
-      <TopThree users={topThree} />
+      <TopThree users={topThree} currentUser={currentUser} />
       <div>
         {otherUsers.map((user, index) => (
-          <LeaderboardItem key={user.userId} rank={index + 4} name={user.userName} score={user.totalPoints} />
+          <LeaderboardItem
+            key={user.userId}
+            rank={index + 4}
+            name={user.userName}
+            score={user.totalPoints}
+            isCurrentUser={currentUser && currentUser.userId === user.userId}
+          />
         ))}
       </div>
     </>

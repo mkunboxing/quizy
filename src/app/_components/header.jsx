@@ -1,3 +1,4 @@
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -7,6 +8,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [points, setPoints] = useState(0);
   const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -15,6 +17,7 @@ export default function Header() {
       const payload = JSON.parse(atob(token.split(".")[1]));
       setUserId(payload.userId || "User");
       console.log(payload.userId);
+      setUserName(payload.userName || "User");
     }
   }, []);
 
@@ -23,7 +26,7 @@ export default function Header() {
       if (userId) {
         try {
           const token = localStorage.getItem("token");
-          const response = await fetch(
+          const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/ans/user-points/${userId}`,
             {
               headers: {
@@ -31,12 +34,8 @@ export default function Header() {
               }
             }
           );
-          if (response.ok) {
-            const data = await response.json();
-            setPoints(data.data.totalPoints);
-          } else {
-            console.error("Failed to fetch user points");
-          }
+          setPoints(response.data.data.totalPoints);
+          setUserName(response.data.data.userName);
         } catch (error) {
           console.error("Error fetching user points:", error);
         }
@@ -50,7 +49,7 @@ export default function Header() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserId("");
-    setPoints(0);
+    setUserName("");
   };
 
   return (
@@ -77,6 +76,14 @@ export default function Header() {
                 />
               </svg>
             </button>
+          </div>
+          <div className="md:hidden flex-grow flex justify-center items-center">
+            <div className="flex items-center bg-gray-700 rounded-full px-4 py-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span className="text-white font-semibold text-sm">{userName}</span>
+            </div>
           </div>
           <div className="md:hidden">
             <div className="flex items-center bg-gray-500 rounded-full px-4 py-1">
@@ -120,6 +127,13 @@ export default function Header() {
             </>
           )}
           <div className="hidden md:block">
+            <div className="flex items-center">
+            <div className="flex items-center bg-gray-700 rounded-full px-4 py-2 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span className="text-white font-bold">{userName}</span>
+            </div>
             <div className="flex items-center bg-gray-500 rounded-full px-4 py-2">
               <Image
                 src="/coin.png"
@@ -129,6 +143,7 @@ export default function Header() {
                 className="mr-2"
               />
               <span className="text-white font-bold">{points}</span>
+            </div>
             </div>
           </div>
         </div>

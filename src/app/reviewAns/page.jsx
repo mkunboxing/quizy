@@ -47,6 +47,7 @@ const ReviewAnsContent = () => {
       {reviewData.map((item, index) => (
         <ReviewCard
           key={item._id}
+          questionNumber={index + 1}
           question={item.question.question}
           options={item.question.options.map(option => option.answer)}
           correctAnswer={item.question.options.find(option => option.answerId === item.correctAnswerId).answer} 

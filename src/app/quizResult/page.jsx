@@ -111,7 +111,7 @@ const QuizResultContent = () => {
   }, [userId, cardId]);
 
   return (
-    <div className="mx-auto md:px-5 md:py-5 bg-gray-900 h-screen">
+    <div className="mx-auto md:px-5 md:py-5 bg-gray-900 min-h-screen">
       {/* Conditionally render confetti */}
       {showConfetti && (
         <Confetti

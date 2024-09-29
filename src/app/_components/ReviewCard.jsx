@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Clock, Coins, Check, ArrowLeft } from 'lucide-react';
 
-const ReviewCard = ({ question, options, correctAnswer, userAnswer, time, score }) => {
+const ReviewCard = ({ question, options, correctAnswer, userAnswer, time, score, questionNumber }) => {
   // Determine the background color based on the score
   const scoreBgColor = score > 0 ? 'bg-green-500' : 'bg-red-500';
 
@@ -9,7 +9,7 @@ const ReviewCard = ({ question, options, correctAnswer, userAnswer, time, score 
     
     <div className="w-full mx-auto bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg p-2">
       <div className="px-4 py-3 flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Ques 2:</h2>
+        <h2 className="text-lg font-semibold">Question {questionNumber}:</h2>
         <div className="flex items-center space-x-2">
           <div className={`rounded-full p-1 ${scoreBgColor}`}>
             {score > 0 ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
