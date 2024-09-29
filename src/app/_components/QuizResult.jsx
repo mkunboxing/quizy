@@ -17,15 +17,15 @@ const QuizResult = ({ quizTitle, results }) => {
 
       <div className="bg-gray-800 rounded-lg p-6 mb-6">
         <div className="grid grid-cols-2 gap-4">
-          <ResultItem icon={<Coins className="text-yellow-400" />} label="Coin Earned" value={results.coinEarned} />
-          <ResultItem icon={<Trophy className="text-yellow-400" />} label="Your Score" value={results.score} />
+          {/* <ResultItem icon={<Coins className="text-yellow-400" />} label="Coin Earned" value={results.coinEarned} /> */}
+          <ResultItem icon={<Trophy className="text-yellow-400" />} label="Your Score" value={results.score} className='col-span-2' />
           <ResultItem icon={<CheckCircle className="text-green-500" />} label="Correct" value={results.correct} />
           <ResultItem icon={<XCircle className="text-red-500" />} label="Incorrect" value={results.incorrect} />
-          <ResultItem icon={<Percent className="text-red-500" />} label="Percentage" value={`${results.percentage}%`} />
-          <ResultItem icon={<Clock className="text-blue-400" />} label="Time Spent" value={`${results.timeSpent} sec`} />
-          <ResultItem icon={<Minus className="text-red-500" />} label="Unattempted" value={results.unattempted} />
+          <ResultItem icon={<Percent className="text-red-500" />} label="Percentage" value={`${results.percentage}%`} className='col-span-2' />
+          <ResultItem icon={<Clock className="text-blue-400" />} label="Time Spent" value={`${results.timeSpent} sec`}  />
+          {/* <ResultItem icon={<Minus className="text-red-500" />} label="Unattempted" value={results.unattempted} /> */}
           <ResultItem icon={<Clock className="text-blue-400" />} label="Time/Ques" value={`${results.timePerQuestion} sec`} />
-          <ResultItem icon={<Medal className="text-yellow-400" />} label="Live Rank" value={results.liveRank} className="col-span-2" />
+          {/* <ResultItem icon={<Medal className="text-yellow-400" />} label="Live Rank" value={results.liveRank} className="col-span-2" /> */}
         </div>
       </div>
       <Link 

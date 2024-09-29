@@ -148,7 +148,7 @@ const QuestionsContent = () => {
   };
 
   return (
-    <div className="h-full w-full mx-auto px-4 md:py-8 py-4 bg-gray-900">
+    <div className="h-screen w-full mx-auto px-4 md:py-8 py-4 bg-gray-900">
       <h1 className='text-yellow-500 text-center text-2xl font-bold mb-4'>{cardName} Quiz</h1>
       <div className='bg-gray-800 rounded-lg p-4 md:p-8 text-white mb-14'>
         <div className="text-center md:mb-8 mb-1">
@@ -213,7 +213,7 @@ const QuestionsContent = () => {
         </div>
       )}
 
-      {currentQuestionIndex === questions.length - 1 && (
+      {showAnswer && currentQuestionIndex === questions.length - 1 && (
         <button
           className="w-full mt-8 py-3 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
           onClick={handleSubmit}

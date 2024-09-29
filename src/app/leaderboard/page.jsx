@@ -5,17 +5,16 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation'; // Importing the useSearchParams hook
 
 const LeaderboardItem = ({ rank, name, score }) => (
-  <div className="flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2">
-    
-    <span className="text-yellow-400  font-bold">{rank}</span>
+  <div className="flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2 h-full">
+    <span className="text-yellow-400  font-bold text-xs md:text-xl">{rank}</span>
     <div className="flex items-center">
-      <Image src="/userImage.png" alt={name} className="w-10 h-10 rounded-full mr-2" width={40} height={40} />
-      <span className="text-white">{name}</span>
+      <Image src="/userImage.png" alt={name} className="w-8 h-8 rounded-full mr-2 md:w-12 md:h-12" width={40} height={40} />
+      <span className="text-white text-sm md:text-xl capitalize">{name}</span>
     </div>
     <div className="flex items-center">
-    <span className="text-yellow-400 mr-2">Points</span>
-      <div className="bg-yellow-400 rounded-full w-6 h-6 flex items-center justify-center">
-      <span className="text-gray-800 ">{score}</span>
+    <span className="text-yellow-400 mr-2 text-xs md:text-xl">Points</span>
+      <div className="bg-yellow-400 rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+      <span className="text-gray-800 text-xs md:text-xl">{score}</span>
       </div>
     </div>
   </div>
@@ -65,11 +64,11 @@ const TopThree = ({ users }) => (
               <span className="text-white font-bold">{index + 1}</span>
             </div>
           </div>
-          <span className="text-white text-sm">{user.userName}</span>
-          <span className="text-yellow-400">{user.totalPoints}</span>
+          <span className="text-white text-xs font-bold md:text-xl capitalize">{user.userName}</span>
+          <span className="text-yellow-400 text-xs md:text-xl">{user.totalPoints}</span>
         </motion.div>
       );
-    })}
+    })}   
   </div>
 );
 const LeaderboardContent = () => {
@@ -121,9 +120,9 @@ const LeaderboardContent = () => {
 
 const Leaderboard = () => {
   return (
-    <div className="w-full h-screen bg-gray-900 p-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <h1 className="text-yellow-400 text-2xl font-bold">Leaderboard</h1>
+    <div className="mx-auto h-screen bg-gray-900 p-8">
+      <div className="flex items-center justify-center mb-6">
+        <h1 className="text-yellow-400 text-xl md:text-2xl font-bold">Leaderboard</h1>
       </div>
       <Suspense fallback={<div className="text-white">Loading...</div>}>
         <LeaderboardContent />

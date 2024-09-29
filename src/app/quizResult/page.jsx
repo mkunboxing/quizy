@@ -58,7 +58,7 @@ const QuizResultContent = () => {
 
 
   return (
-    <div className="mx-auto md:px-5 md:py-5 bg-gray-900">
+    <div className="mx-auto md:px-5 md:py-5 bg-gray-900 h-screen">
     <QuizResult
       quizTitle='Your Quiz Result'
       results={results}
