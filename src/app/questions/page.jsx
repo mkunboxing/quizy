@@ -37,8 +37,6 @@ const QuestionsContent = () => {
     }
   }, []);
 
-  
-
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cards/${id}`)
       .then(response => {
@@ -155,9 +153,9 @@ const QuestionsContent = () => {
   };
 
   return (
-    <div className="h-screen w-full mx-auto px-4 md:py-8 py-4 bg-gray-900">
-      <div className="flex justify-between items-center">
-        <h1 className="text-yellow-500 text-2xl font-bold mb-4">
+    <div className="min-h-screen flex flex-col mx-auto px-4 md:py-8 py-4 bg-gray-900">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-yellow-500 text-2xl font-bold">
           {cardName} Quiz
         </h1>
         <div className="flex items-center bg-gray-500 rounded-full px-4 py-1">
@@ -171,7 +169,7 @@ const QuestionsContent = () => {
           <span className="text-white font-bold">{points}</span>
         </div>
       </div>
-      <div className="bg-gray-800 rounded-lg p-4 md:p-8 text-white mb-14">
+      <div className="bg-gray-800 rounded-lg p-4 md:p-8 text-white flex-grow">
         <div className="text-center md:mb-8 mb-1">
           <h2 className="md:text-2xl mb-2">Time Remaining :</h2>
           <div className="inline-block relative">

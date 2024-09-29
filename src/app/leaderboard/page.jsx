@@ -122,7 +122,7 @@ const Leaderboard = () => {
     router.back();
   };
   return (
-    <div className="mx-auto h-screen bg-gray-900 p-8">
+    <div className="mx-auto min-h-screen bg-gray-900 p-8">
       <div className="flex items-center justify-center mb-6">
         <div onClick={handleBackClick} className="absolute left-10 cursor-pointer">
           <ArrowLeft className="text-yellow-400" />
