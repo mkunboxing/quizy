@@ -52,7 +52,7 @@ const QuizResult = ({ quizTitle, results }) => {
   }, []);
 
   return (
-    <div className="mx-auto px-4 py-8 bg-gray-900 text-white">
+    <div className="mx-auto px-4 py-8 bg-gray-900 text-white max-w-3xl">
       <div className="flex items-center mb-6 justify-center relative">
         <Link href="/" className="absolute left-0">
           <ArrowLeft className="text-yellow-400 cursor-pointer" />

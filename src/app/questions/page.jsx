@@ -154,26 +154,26 @@ const QuestionsContent = () => {
 
   return (
     <div className="min-h-screen flex flex-col mx-auto px-4 md:py-8 py-4 bg-gray-900">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-yellow-500 text-2xl font-bold">
+      <div className="flex justify-between items-center mb-4 max-w-3xl mx-auto w-full">
+        <h1 className="text-yellow-500 text-xl md:text-2xl font-bold">
           {cardName} Quiz
         </h1>
-        <div className="flex items-center bg-gray-500 rounded-full px-4 py-1">
+        <div className="flex items-center bg-gray-500 rounded-full px-3 py-1">
           <Image
             src="/coin.png"
             alt="Coin"
-            width={15}
-            height={15}
+            width={12}
+            height={12}
             className="mr-2"
           />
-          <span className="text-white font-bold">{points}</span>
+          <span className="text-white font-bold text-sm md:text-base">{points}</span>
         </div>
       </div>
-      <div className="bg-gray-800 rounded-lg p-4 md:p-8 text-white flex-grow">
-        <div className="text-center md:mb-8 mb-1">
-          <h2 className="md:text-2xl mb-2">Time Remaining :</h2>
+      <div className="bg-gray-800 rounded-lg p-3 md:p-6 text-white flex-grow max-w-xl mx-auto w-full">
+        <div className="text-center md:mb-3 mb-1">
+          <h2 className="text-lg md:text-xl mb-2">Time Remaining :</h2>
           <div className="inline-block relative">
-            <svg className="md:w-32 md:h-32 w-14 h-14" viewBox="0 0 100 100">
+            <svg className="w-20 h-20 md:w-14 md:h-14" viewBox="0 0 100 100">
               <circle
                 className="text-gray-700"
                 strokeWidth="8"
@@ -195,25 +195,25 @@ const QuestionsContent = () => {
                 strokeDashoffset={264 - (264 * timeLeft) / 60}
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-2xl md:text-4xl font-bold">
+            <span className="absolute inset-0 flex items-center justify-center text-xl md:text-2xl font-bold">
               {timeLeft}
             </span>
           </div>
         </div>
 
-        <p className="text-center md:text-xl text-xs md:mb-6 mb-2">
+        <p className="text-center text-sm md:text-md md:mb-2 mb-2">
           Question {currentQuestionIndex + 1} of {questions.length}
         </p>
 
-        <h2 className="md:text-xl text-sm md:mb-8 mb-3 text-center">
+        <h2 className="text-sm md:text-lg md:mb-3 mb-3 text-center">
           {currentQuestion.question}
         </h2>
 
-        <div className="md:space-y-4 space-y-3">
+        <div className="md:space-y-3 space-y-2">
           {currentQuestion.options.map((option) => (
             <button
               key={option.answerId}
-              className={`w-full py-2 md:py-3 px-4 md:px-6 rounded-full text-left ${getButtonClass(
+              className={`w-full py-2 md:py-3 px-3 md:px-4 rounded-full text-left text-sm md:text-base ${getButtonClass(
                 option
               )}`}
               onClick={() => handleAnswerClick(option.answerId)}
@@ -229,10 +229,10 @@ const QuestionsContent = () => {
       </div>
 
       {showAnswer && currentQuestionIndex < questions.length - 1 && (
-        <div className="py-4 font-[Montserrat] flex fixed bottom-0 left-0 items-center bg-gray-800 justify-center w-full z-20">
-          <div className="w-1/2 flex justify-center items-center">
+        <div className="py-3 font-[Montserrat] flex fixed bottom-0 left-0 items-center bg-gray-800 justify-center w-full z-20">
+          <div className="w-full max-w-xl mx-auto px-4">
             <button
-              className="w-full py-3 px-4 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors"
+              className="w-full py-2 md:py-3 px-4 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors text-sm md:text-base"
               onClick={handleNextQuestion}
             >
               Next Question
@@ -242,12 +242,16 @@ const QuestionsContent = () => {
       )}
 
       {showAnswer && currentQuestionIndex === questions.length - 1 && (
-        <button
-          className="w-full mt-8 py-3 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+        <div className="py-3 font-[Montserrat] flex fixed bottom-0 left-0 items-center bg-gray-800 justify-center w-full z-20">
+          <div className="w-full max-w-xl mx-auto px-4">
+            <button
+              className="w-full py-2 md:py-3 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-sm md:text-base"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       )}
       <AnimatePresence>
         {showCoinAnimation && (
@@ -270,7 +274,7 @@ const QuestionsContent = () => {
             transition={{ duration: 1, ease: "easeInOut" }}
             className="fixed"
           >
-            <Image src="/coin.png" alt="Coin" width={30} height={30} />
+            <Image src="/coin.png" alt="Coin" width={24} height={24} />
           </motion.div>
         )}
       </AnimatePresence>

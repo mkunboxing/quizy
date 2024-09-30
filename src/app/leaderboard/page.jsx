@@ -3,7 +3,8 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation'; // Importing the useSearchParams hook
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
+import Confetti from 'react-confetti';
 
 const LeaderboardItem = ({ rank, name, score, isCurrentUser }) => (
   <div className={`flex items-center justify-between bg-gray-800 p-2 rounded-lg mb-2 h-full ${isCurrentUser ? 'bg-green-500' : ''}`}>
@@ -80,8 +81,10 @@ const LeaderboardContent = () => {
 
   const [topThree, setTopThree] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
+  const [visibleUsers, setVisibleUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null); // To store the current user data
   const [token, setToken] = useState(null); // To store token after component mounts
+  const [isMoreVisible, setIsMoreVisible] = useState(false); // Track if more users are visible
 
   useEffect(() => {
     // Set token after the component mounts to ensure it's only accessed client-side
@@ -114,6 +117,17 @@ const LeaderboardContent = () => {
 
         setTopThree(combinedData.slice(0, 3));
         setOtherUsers(combinedData.slice(3));
+
+        // Initialize visible users (first 4 from other users)
+        setVisibleUsers(combinedData.slice(3, 7));
+
+        // If current user isn't in the top three, ensure they appear first in the "other users" list
+        if (userId && !combinedData.slice(0, 3).find(user => user.userId === userId)) {
+          const currentUserData = combinedData.find(user => user.userId === userId);
+          if (currentUserData) {
+            setVisibleUsers(prev => [currentUserData, ...prev]);
+          }
+        }
       } catch (error) {
         console.error('Error fetching leaderboard data:', error);
       }
@@ -124,19 +138,33 @@ const LeaderboardContent = () => {
     }
   }, [cardId, userId, token]);
 
+  const handleLoadMore = () => {
+    setIsMoreVisible(true);
+    setVisibleUsers(otherUsers);
+  };
+
   return (
     <>
       <TopThree users={topThree} currentUser={currentUser} />
       <div>
-        {otherUsers.map((user, index) => (
+        {visibleUsers.map((user, index) => (
           <LeaderboardItem
             key={user.userId}
-            rank={index + 4}
+            rank={index + 4} // Adjust rank appropriately
             name={user.userName}
             score={user.totalPoints}
             isCurrentUser={currentUser && currentUser.userId === user.userId}
           />
         ))}
+        {!isMoreVisible && otherUsers.length > visibleUsers.length && (
+          <button
+            onClick={handleLoadMore}
+            className="mt-4 bg-blue-600 text-white py-3 px-4 rounded-lg flex items-center justify-center w-full"
+          >
+            Load More
+            {/* <ChevronRight className="ml-2" /> */}
+          </button>
+        )}
       </div>
     </>
   );
@@ -147,8 +175,31 @@ const Leaderboard = () => {
   const handleBackClick = () => {
     router.back();
   };
+
+  const [showConfetti, setShowConfetti] = useState(true);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    handleResize(); // Set initial size
+    window.addEventListener('resize', handleResize);
+
+    const confettiTimer = setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(confettiTimer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="mx-auto min-h-screen bg-gray-900 p-8">
+      {showConfetti && <Confetti width={windowSize.width} height={windowSize.height} numberOfPieces={500} recycle={false} />}
       <div className="flex items-center justify-center mb-6">
         <div onClick={handleBackClick} className="absolute left-10 cursor-pointer">
           <ArrowLeft className="text-yellow-400" />

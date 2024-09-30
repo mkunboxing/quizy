@@ -118,6 +118,7 @@ const QuizResultContent = () => {
           width={windowSize.width}  // Full window width
           height={windowSize.height} // Full window height
           numberOfPieces={500} // Adjust the amount of confetti
+          recycle={false}
         />
       )}
       <QuizResult
