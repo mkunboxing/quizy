@@ -105,6 +105,11 @@ export default function Header() {
         >
           {!isLoggedIn ? (
             <>
+              <Link href="/PrivateChat">
+                <button className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors w-full md:w-auto">
+                  Private Chat
+                </button>
+              </Link>
               <Link href="/signup">
                 <button className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors w-full md:w-auto">
                   Sign Up
