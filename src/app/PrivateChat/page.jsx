@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io('https://quiz-backend-olive.vercel.app');
-
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
+console.log(process.env.NEXT_PUBLIC_SOCKET_URL);
 const Chat = () => {
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
